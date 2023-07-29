@@ -1,0 +1,61 @@
+# Order of CF Stack Creation
+# Always the stack that is going to export the value would be created first
+
+# Order of CF Stack Deletion
+# If the export variable name is used in some another stack, then the stack that is using the ImportValue function should be deleted.
+# Error would be like this : Export dev-iam-stack-EC2InstanceProfile cannot be deleted as it is in use by dev-ec2-stack
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This Template is used creates IAM Roles for various resources.
+Parameters:
+  EnvironmentName:
+    Description: Name of SDLC Environment
+    Type: String
+
+Resources:
+  EC2InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    DependsOn: ListS3BucketsIAMRole
+    Properties:
+      InstanceProfileName: !Join [ "-", [ !Ref EnvironmentName, "EC2InstanceProfile" ] ]
+      Path: /
+      Roles:
+        - !Ref ListS3BucketsIAMRole
+
+  ListS3BucketsPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: !Join [ "-", [ !Ref EnvironmentName, "ListS3BucketsPolicy" ] ]
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:List*'
+              - 's3:Get*'
+            Resource: '*'
+      Roles:
+        - !Ref ListS3BucketsIAMRole
+
+  ListS3BucketsIAMRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Join [ "-", [ !Ref EnvironmentName, "EC2InstanceRole" ] ]
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+
+Outputs:
+  ListS3BucketsIAMRole:
+    Value: !GetAtt 'ListS3BucketsIAMRole.Arn'
+    Export:
+      Name: !Sub '${AWS::StackName}-ListS3BucketsIAMRole'
+  EC2InstanceProfile:
+    Value: !Ref EC2InstanceProfile
+    Export:
+      Name: !Sub '${AWS::StackName}-EC2InstanceProfile'

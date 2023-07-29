@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: This tempalte will deploy EC2 only when the parameter "EnvironmentName" has value as "prod", this template will work in us-east-1 only
+Parameters:
+  KeyName:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: mykey
+  EnvironmentName:
+    Description: SDLC Environment Value e.g dev/qa/prod.
+    Type: String
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+
+Conditions:
+  CreateProdResources: !Equals [ !Ref EnvironmentName, prod ]
+
+Resources:
+  Ec2Instance:
+    Type: 'AWS::EC2::Instance'
+    Condition: CreateProdResources
+    Properties:
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+      KeyName: !Ref KeyName
+      InstanceType: t2.micro
+      ImageId: !Ref LatestAmiId
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: !Join [ "-", [ !Ref EnvironmentName, 'ec2-security-group' ] ]
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0

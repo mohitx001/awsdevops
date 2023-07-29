@@ -1,0 +1,26 @@
+AWS CICD
+Infrastructure Creation Automation
+Execute CodeBuild Job to create three stacks
+
+Network Stack ( VPC and components )
+
+IAM Stack ( IAM Roles required for EC2 and Compute )
+
+Compute and Storage Resources
+
+EC2 instances with ASG and ELB (optional) as ELB will incur costs.
+
+S3 bucket for Artifacts
+
+Application Deployment Automation
+Create Codebuild Project, CodeDeploy Application with specific Deployment Groups.
+
+Create CodePipeline and configure Source, Build and Deploy Stages in CodePipeline.
+
+Configure IAM Role for Codebuild Project and CodePipeline
+
+CodePipeline should be triggered when there is change in "master" Branch of the Repository.
+
+Make changes in code repo using git commands like git add,commit,push and test the CodePipeline Execution and Deployments.
+
+NOTE: Once above resource creation is validated, check for any AWS Resource Costs that might be associated for the same.

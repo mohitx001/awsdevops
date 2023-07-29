@@ -1,0 +1,9 @@
+Create a CodeBuild Project to deploy Cloudformation Resources as per SDLC Environment.
+
+Push required Cloudformation Templates in Codecommit and run the Codebuild Project from specific Branch of Codecommit.
+
+The Parameters for CF template should be given from AWS Buildspec Commands (aws cli commands)
+
+Note: CF Stack Creation should happen with a CodeBuild Job.
+
+Add CF Drift detection to only deploy to stacks that in IN_SYNC.

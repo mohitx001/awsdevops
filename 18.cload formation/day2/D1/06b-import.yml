@@ -1,0 +1,59 @@
+# Order of CF Stack Creation
+# To use Intinsic function to ImportValue, make sure the Export Name is already create in another stack.
+
+# Order of CF Stack Deletion
+# If the export variable name is used in some another stack, then the stack that is using the ImportValue function should be deleted.
+# Error would be like this : Export dev-iam-stack-EC2InstanceProfile cannot be deleted as it is in use by dev-ec2-stack
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template will launch an EC2 instance with Import value from IAM Role Stack
+Parameters:
+  RoleStackName:
+    Description: 'IAM Role Stack Name'
+    Type: String
+  KeyName:
+    Description: EC2 Instance SSH Key
+    Type: 'AWS::EC2::KeyPair::KeyName'
+  InstanceType:
+    Description: EC2 instance specs configuration
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.small
+      - t2.micro
+  LatestLinuxAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  EnvironmentName:
+    Description: SDLC Environment Value e.g dev/qa/prod.
+    Type: String
+
+Resources:
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestLinuxAmiId
+      KeyName: !Ref KeyName
+      IamInstanceProfile:
+        Fn::ImportValue:
+          !Sub "${RoleStackName}-EC2InstanceProfile"
+      SecurityGroupIds:
+        - !Ref SSHAccessSG
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'ec2-instance' ] ]
+
+  SSHAccessSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: !Join [ "-", [ !Ref EnvironmentName, 'ec2-sg' ] ]
+      GroupDescription: Allow SSH access from anywhere
+      SecurityGroupIngress:
+        - FromPort: '22'
+          ToPort: '22'
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'SSHAccess' ] ]

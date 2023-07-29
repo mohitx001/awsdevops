@@ -1,0 +1,22 @@
+﻿
+#Enable the CF plugin into Visual Studio Code
+
+https://marketplace.visualstudio.com/items?itemName=aws-scripting-guy.cform
+
+View > Extenstions > Search Extensions with "Cloudformation"
+
+Install Below :
+1) CloudFormation by aws-scripting-guy
+Usage
+	Install the extension
+	Create new file
+	Set syntax to JSON or YAML
+	Type start and press tab key to populate basic template skeleton
+	Start typing desired resource name and hit tab key
+
+2) aws-cloudformation-yaml by Daniel Thielking
+
+3) Cloudformation YAML Snippets for VS Code by Danny Steenman
+
+Note:
+Multi-line Comment in YAML using Visual Studio Code : Select the block. Use “CTRL + /”

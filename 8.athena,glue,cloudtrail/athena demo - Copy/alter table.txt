@@ -1,0 +1,1 @@
+ALTER TABLE elb_logs_raw_native_part ADD PARTITION (year='2015',month='01',day='01') location 's3://athena-examples/elb/plaintext/2015/01/01/'

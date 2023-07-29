@@ -1,0 +1,14 @@
+Python boto3 problem statements:
+Write python script for send an email notification when a specific Instance(s) stops in the production environment
+
+Write Python script to find unused volume and send an email notification using SNS.
+
+Write python script to find unused EIPs
+
+Lambda Python code to start specific EC2 instances at 9am and stop instances at 9pm with specific EC2 tags.
+
+Lambda Code for S3 Event Object Upload and custom email notification on Object Uploaded details.
+
+Create a CSV containing a list of all Active CloudFormation Stacks that has Drift status as DRIFTED/In-Sync, also specifying the resources present in the CF stack and send a notification daily at 9am.
+
+Find all the empty buckets in the S3 and delete it

@@ -1,0 +1,4 @@
+---
+paths:
+  fileserver: /home/ec2-user/srv/filer/{{ ansible_fqdn }}
+  dbpath: /home/ec2-user/srv/database/{{ ansible_fqdn }}

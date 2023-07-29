@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: The following example uses an ssm dynamic reference to set Instance Type value to a parameter value stored in Systems Manager Parameter Store. As specified, CloudFormation will use version 1 of the instance_type_parameter parameter for stack and change set operations. You can update the value in SSM Paramter to include another instance type value with version 2, and update the InstanceType resolve reference to include version as 2. Try it with CF Stack Update.
+Parameters:
+  KeyName:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: mykey
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  EnvironmentName:
+    Description: SDLC Environment Value e.g dev/qa/prod.
+    Type: String
+
+Resources:
+# If we change the value of SSM Parameter below to another instance type value and Update the CF Stack, the instance will be updated.
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: !Ref LatestAmiId
+      KeyName: !Ref KeyName
+      InstanceType: '{{resolve:ssm:instance_type_parameter:1}}'
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'ec2-instance' ] ]
+Outputs:
+  InstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value: !Ref EC2Instance
+  AZ:
+    Description: Availability Zone of the newly created EC2 instance
+    Value: !GetAtt EC2Instance.AvailabilityZone
+
+  PublicDNS:
+    Description: Public DNSName of the newly created EC2 instance
+    Value: !GetAtt EC2Instance.PublicDnsName
+  PublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt EC2Instance.PublicIp

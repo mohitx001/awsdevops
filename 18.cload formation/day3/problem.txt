@@ -1,0 +1,20 @@
+PFA Steps for CF and CF with SSM.
+Python Lambda CF Automation Scenario: Drift Detection Automation
+
+Create a CSV containing a list of all Active CloudFormation Stacks that has Drift status as DRIFTED/In-Sync, also specifying the resources present in the CF stack and send a notification daily at 9am.  
+
+Note:
+Use Lambda boto3 client object for cloudformation
+
+Write a for loop to get a list of all the CloudFormation Stacks with CREATE_COMPLETE and UPDATE_COMPLETE state.
+
+Execute the detect_stack_drift function using cloudformation boto3 object to detect drift for a stack
+
+Use describe_stack_drift_detection_status function to get the status of the stack.
+
+Create a list in python if the stack status is DRIFTED.
+
+Mail this list using SNS Topic publish function
+
+Schedule above lambda using CW Event Rule.
+

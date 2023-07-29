@@ -1,0 +1,53 @@
+# firewalld → This module allows for addition or deletion of services and ports in either running or permanent firewalld rules.
+- name: Deploy and start Apache HTTPD service
+  hosts: web
+  vars:
+    web_pkg: httpd
+    firewall_pkg: firewalld
+    web_service: httpd
+    firewall_service: firewalld
+    rule: http
+  tasks:
+    - name: Required packages are installed and up to date
+      yum:
+        name:
+          - "{{ web_pkg }}"
+          - "{{ firewall_pkg }}"
+        state: latest
+    - name: The {{ firewall_service }} service is started and enabled
+      service:
+        name: "{{ firewall_service }}"
+        enabled: true
+        state: started
+    - name: The {{ web_service }} service is started and enabled
+      service:
+        name: "{{ web_service }}"
+        enabled: true
+        state: started
+    - name: Web content is in place
+      copy:
+        content: "This is content written from ansoble playbook"
+        dest: /var/www/html/index.html
+    - name: The firewall port for {{ rule }} is open
+      firewalld:
+        zone: public
+        service: "{{ rule }}"
+        permanent: true
+        immediate: true
+        state: enabled
+      notify: restart firewalld
+
+  handlers:
+    - name: restart firewalld
+      service:
+        name: firewalld
+        state: restarted
+
+- name: Test the web server
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Try connecting to the httpd server
+      uri:
+        url: http://managed-node-02.example.com
+        status_code: 200

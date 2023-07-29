@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: 2010-09-09
+# TO include objects defined by AWS SAM, Transform section should be included in document root.
+Transform: AWS::Serverless-2016-10-31
+Description: >-
+  This Template will create a SNS Topic with a email subscription, S3 bucket, Lambda Function and set an event on any pdf file uploaded on S3 bucket to trigger Lambda Function.
+
+# Define parameters required by the stack
+Parameters:
+  S3BackupBucketName:
+    Type: String
+    Description: Enter S3 Backup Bucket Name
+  NotificationEmailAddress:
+    Type: String
+    Default: 'your-email-id'
+    Description: Enter the email to get the update.
+  SNSTopicName:
+    Type: String
+    Description: Enter the name of the SNS Topic to be created.
+  CodeS3BucketName:
+    Type: String
+    Default: 'aws-devops-testbucket'
+    Description: Enter the S3 bucket name of source code.
+  CodeS3ObjectKeyLocation:
+    Type: String
+    Default: 's3-lambda-sns.zip'
+    Description: Enter the S3 object key of the source code.
+  EnvironmentName:
+    Type: String
+    Description: Enter the SDLC Environment Name
+
+# Define AWS Resources required to be created in the stack
+Resources:
+  SnsTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      TopicName: !Sub '${EnvironmentName}-${SNSTopicName}'
+      DisplayName: !Sub '${EnvironmentName}-${SNSTopicName}'
+      Subscription:
+        - Protocol: email
+          Endpoint: !Ref NotificationEmailAddress
+
+# If you are setting an Event in CF, Bucket should be created in CF
+  EventS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${EnvironmentName}-s3srceventbkt-${AWS::Region}-${AWS::AccountId}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+    DeletionPolicy: Delete
+
+# This will create a Lambda Function with lambda program code on S3 bucket
+  SNSPublisherFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-s3EventLambda'
+      Description: S3 Lambda SNS Trigger Notification
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.8
+      CodeUri:
+        Bucket: !Ref CodeS3BucketName
+        Key: !Ref CodeS3ObjectKeyLocation
+      Role: !GetAtt S3EventLambdaRole.Arn
+      MemorySize: 128
+      Timeout: 120
+      Environment:
+        Variables:
+          BACKUP_BUCKET_NAME: !Ref S3BackupBucketName
+          SNS_TOPIC_ARN: !Ref SnsTopic
+          SDLC_ENVIRONMENT: !Ref EnvironmentName
+      Events:
+        S3ObjectEvent:
+          Type: S3 
+          Properties:
+            Bucket: !Ref EventS3Bucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: suffix
+                    Value: .pdf
+
+# In Serverless, Events to S3 Bucket are supported only when S3 bucket is created in the same stack template.
+
+# This will IAM Role with trust relationship policy for Lambda Service.
+  S3EventLambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      RoleName: !Join [ "-", [ !Ref EnvironmentName, 'S3EventLambdaRole' ] ]
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        -
+          PolicyName: !Join [ "-", [ !Ref EnvironmentName, 'S3EventLambdaCodePolicy' ] ]
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # This statement can be modified to have granular s3 arn bucket permissions
+              - Effect: Allow
+                Action:
+                  - 's3:Put*'
+                  - 's3:Get*'
+                  - 's3:List*'
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - 'sns:Publish'
+                Resource: !Ref SnsTopic
+              - Effect: Allow
+                Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*'
+                Action:
+                  - 'logs:CreateLogStream'
+                  - 'logs:CreateLogGroup'
+              - Effect: Allow
+                Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*:log-stream:*'
+                Action:
+                  - 'logs:PutLogEvents'

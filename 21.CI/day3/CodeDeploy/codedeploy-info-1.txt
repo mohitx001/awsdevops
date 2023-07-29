@@ -1,0 +1,89 @@
+Contonuous Integration:
+Write code -> Push code into Remote Repo ( CodeCommit, Github )
+Build Service ( Execute Build commands ) buildspec.yml
+
+CodeBuild ( buildspec.yml )
+Project
+Source
+Environment
+Role
+
+
+dev
+qa
+prod
+
+4.1.0: prod stable
+
+4.1.1: deployed prod ( failure , inconsistency )
+4.1.1-hf -> extra commits -> fix the code
+4.1.2
+
+
+Continuous delivery:
+deploy-to-qa
+manual-approval-to-prod
+deploy-to-prod
+
+Continuous Deployment:
+deploy-to-qa ( develop )
+
+deploy-to-prod ( master/main )
+
+Continous Deployment:
+EC2 ( Webserver ) Application specific code.
+UI Code ( HTML, CSS )
+
+Webserver - 100
+/var/www/html/
+
+
+Webserver :
+ssh to ws-1 : /var/www/html/
+
+ws-1 -> codedeploy-agent
+ws-2 -> codedeploy-agent
+ws-3 -> codedeploy-agent
+
+IAC Automation:
+1)Infrastructure Creation
+2) Application Code Deployment
+
+dev.flipkart.com ( webservers behind LB
+
+qa.flipkart.com
+
+flipkart.com -> end users are customers
+
+CodeDeploy ( appspec.yml )
+Application
+
+
+Continuous Deployment
+	QaPipeline - Account-A
+		Codecommit ( develop ) -> deployeToQA
+
+	ProdPipeline
+		Codecommit ( master ) -> deployeToProd
+
+Continuous Delivery
+CD-Pipeline
+	Codecommit ( master ) -> deployeToQA -> ManualApproval Stage ( Person involved to review ) -> deployeToProd
+
+Hello,
+
+The following Approval action is waiting for your response:
+
+--Pipeline Details--
+
+Pipeline name: qa-prod-delivery-pipeline
+Stage name: ManualApprovalStage
+Action name: ManualApprovalAction
+Region: ap-south-1
+
+--Approval Details--
+
+Content to review: http://13.233.172.154/
+Approve or reject: https://console.aws.amazon.com/codesuite/codepipeline/pipelines/qa-prod-delivery-pipeline/view?region=ap-south-1#/ManualApprovalStage/ManualApprovalAction/approve/7d3884f5-980c-41d1-83d5-85f3bb695a64
+
+CF template for infra resources for your pipeline.

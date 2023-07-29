@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >-
+  This Template creates a Security Group in a particular and adds inbound rules. Verify Drift results by making changes from AWS Console (manually) in the inbound rules of the Security Group.
+Parameters:
+  VPCId:
+    Description: VPC to create the security group into
+    Type: AWS::EC2::VPC::Id
+
+Resources:
+  SSHSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: SSH Security Group for Subnets CIDR
+      SecurityGroupIngress:
+        - CidrIp: "172.31.64.0/20"
+          FromPort: 22
+          ToPort: 22  
+          IpProtocol: tcp
+        - CidrIp: "172.31.80.0/20"
+          FromPort: 22
+          ToPort: 22
+          IpProtocol: tcp
+        - CidrIp: "103.249.89.229/20"
+          FromPort: 22
+          ToPort: 22
+          IpProtocol: tcp
+      VpcId: !Ref VPCId
+
+  HTTPSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Test Drift HTTP Security Group for Anywhere
+      SecurityGroupIngress:
+        - CidrIp: "0.0.0.0/0"
+          FromPort: 80
+          ToPort: 80
+          IpProtocol: tcp
+      VpcId: !Ref VPCId

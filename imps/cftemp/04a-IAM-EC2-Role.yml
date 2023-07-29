@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Attach IAM Role to an EC2
+Parameters:
+  KeyName:
+    Description: EC2 Instance SSH Key
+    Type: 'AWS::EC2::KeyPair::KeyName'
+  InstanceType:
+    Description: EC2 instance specs configuration
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.small
+      - t2.micro
+  LatestLinuxAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  EnvironmentName:
+    Description: SDLC Environment Value e.g dev/qa/prod.
+    Type: String
+
+Resources:
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestLinuxAmiId
+      KeyName: !Ref KeyName
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      SecurityGroupIds:
+        - !Ref SSHAccessSG
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'ec2-instance' ] ]
+  SSHAccessSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: !Join [ "-", [ !Ref EnvironmentName, 'ec2-sg' ] ]
+      GroupDescription: Allow SSH access from anywhere
+      SecurityGroupIngress:
+        - FromPort: '22'
+          ToPort: '22'
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'SSHAccess' ] ]
+  EC2InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      InstanceProfileName: !Join [ "-", [ !Ref EnvironmentName, 'ListS3BucketsIAMRole' ] ]
+      Path: /
+      Roles:
+        - !Ref ListS3BucketsIAMRole
+  ListS3BucketsPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: !Join [ "-", [ !Ref EnvironmentName, 'ListS3BucketsPolicy' ] ]
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:List*'
+              - 's3:GetObject'
+              - 's3:PutObject'
+            Resource: '*'
+      Roles:
+        - !Ref ListS3BucketsIAMRole
+  ListS3BucketsIAMRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Join [ "-", [ !Ref EnvironmentName, 'ListS3BucketsIAMRole' ] ]
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+Outputs:
+  EC2:
+    Description: Command to SSH the EC2 Instance
+    Value: !Join [ "", [ "ssh -i ",!Ref KeyName,".pem ec2-user@", !GetAtt EC2Instance.PublicIp] ]

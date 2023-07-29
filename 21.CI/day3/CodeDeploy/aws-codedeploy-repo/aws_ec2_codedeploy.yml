@@ -1,0 +1,144 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This CF Template will create Attach IAM Role to an EC2
+Parameters:
+  KeyName:
+    Description: EC2 Instance SSH Key
+    Type: 'AWS::EC2::KeyPair::KeyName'
+  InstanceType:
+    Description: EC2 instance specs configuration
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.small
+      - t2.micro
+  LatestLinuxAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  EnvironmentName:
+    Description: SDLC Environment Value e.g dev/qa/prod.
+    Type: String
+
+Resources:
+  EC2Instance1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestLinuxAmiId
+      KeyName: !Ref KeyName
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+            yum update -y
+            yum install httpd -y
+            systemctl enable httpd
+            systemctl start httpd
+            yum update -y
+            yum install -y ruby wget
+            wget https://aws-codedeploy-eu-west-1.s3.eu-west-1.amazonaws.com/latest/install
+            chmod +x ./install
+            ./install auto
+            systemctl enable codedeploy-agent
+            systemctl start codedeploy-agent
+      IamInstanceProfile: !Ref CodedeployEC2InstanceProfile
+      SecurityGroupIds:
+        - !Ref SSHAccessSG
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'ec2-instance' ] ]
+        - Key: SDLC_ENVIRONMENT
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'application' ] ]
+
+  EC2Instance2:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestLinuxAmiId
+      KeyName: !Ref KeyName
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+            yum update -y
+            yum install httpd -y
+            systemctl enable httpd
+            systemctl start httpd
+            yum update -y
+            yum install -y ruby wget
+            wget https://aws-codedeploy-eu-west-1.s3.eu-west-1.amazonaws.com/latest/install
+            chmod +x ./install
+            ./install auto
+            systemctl enable codedeploy-agent
+            systemctl start codedeploy-agent
+      IamInstanceProfile: !Ref CodedeployEC2InstanceProfile
+      SecurityGroupIds:
+        - !Ref SSHAccessSG
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'ec2-instance' ] ]
+        - Key: SDLC_ENVIRONMENT
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'application' ] ]
+  SSHAccessSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: !Join [ "-", [ !Ref EnvironmentName, 'ec2-sg' ] ]
+      GroupDescription: Allow SSH access from anywhere
+      SecurityGroupIngress:
+        - FromPort: '22'
+          ToPort: '22'
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+        - FromPort: '80'
+          ToPort: '80'
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'SSHAccess' ] ]
+
+  CodedeployEC2InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref CodedeployEc2InstanceRole
+
+  CodeDeployEC2Policy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: !Join [ "-", [ !Ref EnvironmentName, CodedeployEc2InstancePolicy ] ]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Allow
+            Action:
+              - 's3:Get*'
+              - 's3:List*'
+              - 'ec2:*'
+              - 'codedeploy:*'
+            Resource: "*"
+      Roles:
+        - !Ref CodedeployEc2InstanceRole
+
+  CodedeployEc2InstanceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      RoleName: !Join [ "-", [ !Ref EnvironmentName, CodedeployEc2InstanceRole ] ]
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+
+Outputs:
+  EC21:
+    Description: Command to SSH the EC2 Instance
+    Value: !Join [ "", [ "ssh -i ",!Ref KeyName,".pem ec2-user@", !GetAtt EC2Instance1.PublicIp] ]
+  EC22:
+    Description: Command to SSH the EC2 Instance
+    Value: !Join [ "", [ "ssh -i ",!Ref KeyName,".pem ec2-user@", !GetAtt EC2Instance2.PublicIp] ]

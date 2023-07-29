@@ -1,0 +1,76 @@
+D1:
+	file.txt -> 4 lines => file_D1.txt
+	
+D2:
+	file.txt -> 6 lines => file_D2.txt
+	
+D3:
+	file.txt -> 10 lines => file_D3.txt
+
+Cons:
+- Multiple files to manage
+- Store ( local machine ) -> damage, crash
+==================No VCS==================	
+Total Files:
+file_D1.txt
+file_D2.txt
+file_D3.txt
+file.txt
+
+==================VCS-> Git==================
+D1: file.txt -> tracked by VCS - V1 ( commit ) -> Omkar ( Timestamp )
+D2: file.txt/.py/.sh/.yml -> tracked by VCS - V2 ( commit ) -> Chaitanya -> Running Fine
+D3: file.txt -> tracked by VCS - V3 -> Omkar
+D4: traverse back to version of D2 - V2
+
+Total Files:
+file.txt
+
+DVCS:
+Remote Repo : all versions of all files
+Local Repo : all versions of all files
+
+Git -> tracking your directory:
+Anything that you create/modify/delete inside that directory will tracked by Git.
+
+Working Tree -> git add file.txt => add your current working tree changes into staging area -> git commit -m "commit message" => changes in staging area are now versioned by Git
+
+
+-----HEAD-----
+commit 53217180ebddd7b9bf0a84f4568dc37c19d2cb3c (HEAD -> main)
+Author: TestUser <testuser@example.com>
+Date:   Sun Oct 24 20:56:11 2021 +0530
+
+    changes made in the particular file
+------------------------------------
+commit 25b42fdf71955fa4edf5d2959b8a453535478cc1 (HEAD -> main)
+Author: TestUser <testuser@example.com>
+Date:   Sun Oct 24 21:08:19 2021 +0530
+
+    added changes to same file for new commit
+
+commit 53217180ebddd7b9bf0a84f4568dc37c19d2cb3c
+Author: TestUser <testuser@example.com>
+Date:   Sun Oct 24 20:56:11 2021 +0530
+
+    changes made in the particular file
+	
+	
+Working Tree
+file1.txt
+file2.txt
+file3.txt
+
+git add file1.txt file2.txt
+
+Staging Area:
+file1.txt
+file2.txt
+file3.txt
+
+git reset file3.txt
+git status 
+Staging Area:
+file1.txt
+file2.txt
+git commit -m "added 1 and 2 text file"

@@ -1,0 +1,2 @@
+1. sudo aws ec2 authorize-security-group-ingress --protocol tcp --port 9921 --cidr 172.16.8.99/8 --group-id sg-0eabb3bcc07759bf9 --region ap-south-1
+2.

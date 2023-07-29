@@ -1,0 +1,86 @@
+body {
+      background-image: url('images/background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-color: #ffffff;
+      background-repeat: no-repeat;
+}
+
+.dict {
+    # background: #00800040;
+    # border: green;
+    # border-width: 2px;
+    # border-style: solid;
+    padding: 5px;
+    margin: 5px;
+    min-width: 150px;
+    display: inline-block;
+}
+
+.property {
+    background: #80000040;
+    border: red;
+    border-width: 2px;
+    border-style: solid;
+    padding: 5px;
+    margin: 5px;
+    min-width: 150px;
+    display: inline-block;
+}
+
+.string {
+    # background: #80800040;
+    # border: red;
+    # border-width: 1px;
+    # border-style: solid;
+    padding: 5px;
+    margin: 5px;
+    min-width: 100px;
+    display: inline-block;
+}
+
+.array {
+    # background: #00008040;
+    # border: blue;
+    # border-width: 2px;
+    # border-style: solid;
+    padding: 5px;
+    margin: 5px;
+    min-width: 150px;
+}
+
+.inblock {
+    padding: 5px;
+    margin: 5px;
+    display: inline-block;
+
+}
+
+#editor {
+        height: 90vh;
+        width: 42vw;
+        font-size: 16px;
+    }
+
+#solutionEditor {
+        height: 90vh;
+        width: 39vw;
+        font-size: 16px;
+    }
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.card {
+    min-width: 150px;
+}
+
+
+code {
+    color: #3ddcf1;
+}

@@ -1,0 +1,162 @@
+## Git steps
+- Created a Remo Repo:
+- Clone the Repo :
+git clone https://github.com/GIT_USERNAME/demo-steps.git
+OR
+git clone git@github.com:GIT_USERNAME/demo-steps.git
+
+cd demo-steps
+
+git remote -v
+git@github.com:GIT_USERNAME/demo-steps.git
+
+# create some files in local repo and commit the files in local repo
+# push the changes to remote repo.
+
+git push -u origin main
+
+### ssh setup for github
+-> private key(.pem) and public key(.pub) ( /home/ec2-user/.ssh/authorized_keys)
+~ -> home path of logged in user
+
+# In case if you have to modify https remote url with ssh remote url for local repo:
+git remote set-url origin git@github.com:<GIT_USERNAME>/demo-steps.git
+
+# push local changes to remote
+# when your local branch is ahead of remote repo branch
+git push origin main
+
+# pull
+- when remote repo branch is ahead of local repo branch
+git pull origin main
+
+## push and pull
+-> these operations are happening on the specific branch.
+- push : push local branch( main ) commits to remote repo branch (main) commits
+- pull : pull remote repo commits into local repo commits
+	- remote commits in that branch are more than local commit in the branch
+
+git push origin main
+-> push all local commits in main branch to remote main branch
+-> local commits are more than remote commits
+
+git push origin feature_1
+-> push all local commits in feature_1 branch to remote feature_1 branch
+
+## add , commit and push changes
+
+Local repo : C1 -> C2
+Remote Repo : C1
+
+## EC2 instance:
+- Launched an EC2 instance -> aws ( download key pair ) ( key.pem )
+-> private key(.pem) ( Key ) and public key(.pub) ( Lock ) ( /home/ec2-user/.ssh/authorized_keys )
+public key denied ( if you use incorrect key )
+ssh -i key.pem ec2-user@180.65.95.48
+Putty ->
+180.65.95.48
+key.ppk ( key1.ppk )
+ec2-user
+
+-> (.pem -> .ppk )  -> putty(client) -> ssh authentication -> server( EC2 Instance Linux ) ( /home/ec2-user/.ssh/authorized_keys)
+(.pem -> .ppk ) -> local machine on putty client.
+On your instance -> /home/ec2-user/.ssh/authorized_keys ( public key file content )
+
+putty client:
+- Public IP of EC2 instance ( /home/ec2-user/.ssh/authorized_keys ) public key ( lock )
+- .ppk file ( Private key )
+- ec2-user
+
+-> network open
+-> ssh handshake between private key ( local ) and public key ( server )
+
+- git clone
+- Create a remote repo -> you don't have the local repo folder in your machine
+	- git clone <REPO_URL>
+	- this will copy all branches, all files , into a folder named with repo name.
+- git pull
+	- Download/Get all commits from repo repo into local repo for specific branches.
+
+-----------
+AWS -> your account , ( Acc Owner - Company Project ) -> IAM User
+Github -> ( your account ) -> new account with ( company's mail id ) -> repository (
+
+https -> pat token ( automationb codebuild, jenkins , circle CI ) ->
+ssh ->
+
+Users -> git push, pull of programs , code
+
+------------------------------------------
+configure ssh keypair
+in ssh -> git clone ssh_url
+in https -> clone will work without authentication
+
+set-url
+
+master , origin/master
+feature_1, origin/feature_1
+- git branches
+- git merge ( two branches )
+	- base branch ( main/master ) -> merge receiving branch
+	- source branch ( feature_1) ( branches that have more commits than base branch)
+- Merge Operation
+	- Local Merge Operation
+		- here, merge will happen locally and changes needs to be push to remote
+		- local merge of feature_1 into master -> pushed local master into remote master
+	- Remote Merge Operation
+		- create a feature branch in local and make your changes in local
+		- push the feature branch from local to remote
+		- Raise Pull Request ( feature branch to be merged into master branch )
+		- Pull Request
+			- origin/main <-- origin/feature_changes
+		- Review of the change
+		- Approval of the change
+		- Once Approved, changes can be merged
+		- Remote base branch is ahead of local base branch
+- Protect your main branch from anyone to direct push changes from local main to remote main.
+
+# Best Practice:
+- Changes to main branch should happen only using Pull Request ( Remote merge opeation )
+- Direct push operation to main branch should be restricted
+local branch is ahead then remote -> push
+remote branch is ahead then local -> git pull origin main
+git pull :
+
+
+-----------------------------------
+No two users will share a same branch
+Local
+- git pull origin main
+	- get you all remote commits in main branch into local branch
+- Create a new branch : feature_changes
+	- Checkout to that branch:
+	- Add and commit the changes
+	- Push feature_changes branch from local to remote
+
+Remote
+	- feature_changes is available in remote.
+	- If you are good with completing changes in feature branch, Raise a Pull Request to merge feature_changes into main ( base branch )
+	- Reviewed and Approved and merged
+	- Changes that are in origin/feature_changes branch are merged in origin/main branch
+	- Remote origin/main branch is ahead of local main
+
+------------------------------------
+
+Github Clone URL:
+SSH : git@github.com:GIT_USERNAME/git-demo-testing.git
+
+CodeCommit Clone URL:
+ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/iac-automation-codebuild
+
+Local merge : feature_1 -> main ( git push origin main ) ( not allowed )
+Remote merge :
+local main branch updated ( git pull origin main )
+- git branch feature_2
+- git checkout feature_2
+- git commit , git commit
+- git push origin feature_2
+
+Git:
+branches, commits
+tags -> v1.0, v1.1 , v1.2
+Android 10.3 ( 10.2 ) -> code changes

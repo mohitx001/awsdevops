@@ -1,0 +1,15 @@
+# Here, as the BucketName Property is hardcoded in the template, this template cannot be reused.
+# To execute the same, modify the BucketName value.
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Create S3 Bucket with Default Properties and enable Static Website Properties
+
+Resources:
+  HelloBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "mjxkiller"
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html

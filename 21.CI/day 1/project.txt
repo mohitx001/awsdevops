@@ -1,0 +1,2 @@
+PFA
+- Create a CodeBuild Project with No Source and execute the Build Project atleast with 10 builds to enter different commands and navigate to execution build information.

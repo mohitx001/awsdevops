@@ -1,0 +1,24 @@
+---
+- name: Create an ec2 instance
+  hosts: myhost
+  gather_facts: false
+
+  vars:
+      region: us-east-1
+      instance_type: t2.micro
+      ami: ami-0b69ea66ff7391e80
+      keypair: aws-desktop-NV
+
+  tasks:
+    - name: Create an ec2 instance
+      ec2:
+         key_name: "{{ keypair }}"
+         group: default
+         instance_type: "{{ instance_type }}"
+         image: "{{ ami }}"
+         wait: true
+         region: "{{ region }}"
+         count: 1
+         vpc_subnet_id: subnet-b95974dc
+         assign_public_ip: yes
+

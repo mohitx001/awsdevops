@@ -1,0 +1,216 @@
+AWS , Linux, Python , AWS CICD, IAC CloudFormation, Docker, Kubernetes
+
+L1:
+AWS and Linux
+VPC
+
+Mock L2
+Linux , DevOps and AWS
+1. Devops Workflow (Code to Deployment : Git -> Build service -> deployment -> Servers)
+2. Git scenarios : branching, merging strategy, Pull Requests , git best practices, ssh and https authentication, branch access policies.
+3. Cloudformation Scenarios and Implementation ( Sections, Intrinsic Functions, Output, export, import, Drift Detection, automate drift detection (python boto3, shell script))
+4. IAC Automation : Git -> Codebuild -> CF -> Deploy stacks as per SDLC environment
+5. Explain AWS CICD implementation ( CodeCommit, CodeBuild, CodeDeploy, CodePipeline )
+6. Yum package manager
+4. Shell scripting scenarios ( bash scripts, awk, sed, for, if else)
+5. Python Scripting ( Lambda boto3 examples )
+8. Firewalld configuration scenarios, Network config changes , SG, NACL, Linux
+11. Devops Best Practices that are followed.
+	Using Env Variables, parameters to make code generic, no storing sensitive information in code.
+
+AWS Troubleshooting:
+	- Load balancer : route ec2 -> retry the connection , every 5 sec, 5 times, unhealthy
+	- Troubleshooting of LB and EC2 instance network.
+- Cloudwatch custom metrics, cloudwatch agent will be installed on your EC2, linux logs to be pushed in cloudwatch logs in the log group.
+	▪ How to configure custom cloudwatch metrics ( cw daemon, script that will post logs from ec2 to log group )
+	- nginx , httpd => /var/log/nginx/access.log
+						/var/log/nginx/error.log
+						/var/log/httpd/access.log
+						/var/log/httpd/error.log
+				- cat access.log | grep '10.10*' | wc -l
+	▪ I want to monitor OS metrics (memory utilization ) and performance counters of my amazon linux instance.
+Linux : 
+	sed, awk utilities
+	How to use command line arguments in a Script?
+	How to check if my previously executed command was successful?
+	What is Shell Redirection Operators?
+	What is crontab in Linux, how to set a cronjob?
+	How to Debug a Shell Script? bash -x script.sh
+	How to find all the files modified in the last 5 days and save the result in a text file?
+	ctime , mtime , atime for files
+	I want to install a package and is failing, what are the troubleshooting steps that you will follow
+	which port curl command connects, and on which port u get the response
+	How to kill process, telnet, check load on server, netstat, nmap, nc commands, nslookup
+	What all things ssh needs for authentication
+	- if your private key is lost.
+	▪ List of open ports?
+	▪ What does nslookup and netstat?
+	▪ What is process? How to kill process? How to get PID?
+	▪ What is the use of du command?
+
+Linux scenario questions :
+	- Command to find all files in a directory with more than 1GB
+	- get the size of all files and folders in a particular directory
+	- list the files that are modified in the last 3 days.
+	- check process run by a particular user
+	- how to check cpu utilization and memory utilization in linux ( free -m , top )
+	- zip files in linux older than 1 month.
+	▪ Write the shellscript for count of IP Address from file?
+	▪ How to access EC2 instance, if pem file is lost?
+	- what types of error codes find if you enable ELB LOGS, What is meaning of what error code, 
+	- What is 2xx ? What is 3xx? what is 4xx? What is 5xx?
+		200 OK - Success
+		300 - Redirection Messages
+		400 - Client Error Messages
+			- 403 Forbidden
+			- 404 Not Found
+			- Request Timed Out
+		500 - Server Error Messages
+		
+Git:  branching, merging strategy, Pull Requests , git best practices, ssh and https authentication, branch access policies.
+	Github/CodeCommit:
+		Dockerfile: Commands to create image
+		buildspec.yml
+		appspec.yml
+		nginx-deployment.yaml
+		templates/ec2.yml
+		scripts/ec2_create.sh
+		scripts/aws_cli.sh
+	
+	child_branch_1 , 
+	develop : qa
+	main : prod
+
+IAC: Infrastructure as a Code
+	- CloudFormation ( template.yml , template.json ) -> AWS Account ( resource provisioning definition )
+		( Sections, Intrinsic Functions, Output, export, import, Drift Detection, automate drift detection)
+	- Terraform ( AWS , Azure , GCP ) (  template.tf ) -> ( resource provisioning definition )
+
+IAC Automation:
+	- Git -> Codebuild -> CF -> Deploy
+		Network stack
+		IAM Stack
+		EC2 Stack
+
+Application Deployment Automation
+▪ CICD Pipeline
+▪ Jenkins 
+
+Scripting:
+	- Shell Script ( bash scripts, awk, sed, for, if else, aws cli commands and filter)
+		shell script -> csv file sg inbound: filename, region, security group name
+			Command Line Arguments: $1, $2, $3
+	- Python Script ( list, dictionary, tuple, for, modules, boto3 -> aws sdk, ) Lambda 
+		Python script using Boto3
+		1)Write python script for send an email notification When a specific Instance(s) stops in the production environment
+		2)Write Python script to find unused volume and send an email notification
+		3)Write python script to find unused EIPs
+		4)How to automatically tag EC2 instance after its launched and if its not tagged?
+		(Ans:  create cloudwatch event pattern using API Call via CloudTrail and trigger lambda function, write python code for creating tag in the lambda function)
+
+Logging:
+	Query S3 Bucket Files -> Athena
+		VPC Flow Logs -> S3 bucket
+		CloudTrail Logs -> S3 bucket
+		ELB Logs -> S3 bucket
+		S3 Access logs -> S3 bucket
+
+Ansible
+▪ What is Inventory and where the inventory file?
+▪ What is Ansible Role?
+▪ What is Module?
+▪ Using Ansible, if any application is installed, how to check and troubleshoot the installation/configuration of that application.
+▪ How to define inventory in Ansible
+▪ parameters in ansible.cfg
+▪ Ansible configuration file precedence.
+▪ Ansible variable precedence
+▪ Modules? Ansible playbook
+
+Docker:
+	▪ Dockerfile?
+	▪ Can we use two FROM in Dockerfile?
+	▪ Docker File instructions
+	▪ Docker Image Build Pipeline Docker hub, ECR.
+
+Kubernetes:
+	- Architecture of kubernetes 
+	- Master, worker, controller manager, etcd, kublet, scheduler manager, pods, replica set, rollout deployment, updates deployments.
+	Kubernetes
+		kubectl create deployments -f deployment.yaml
+	- Setup a EKS Cluster.
+	- Application Build Pipeline and Deployment into kubernetes
+
+========================================
+Jenkins:
+	- Github
+		git-repo:
+			java-tomcat-sample
+				src/
+				
+	- Jenkins Job -> mvn clean install -> target/java-tomcat-sample.war
+	- java-tomcat-sample.war -> deploy this to target Tomcat EC2 instances
+		/opt/apache-tomcat/webapps/java-tomcat-sample.war
+	- UI for Tomcat
+-----------------------------------------------------------------------------
+git-repo:
+	java-tomcat-sample
+		src/
+	1. mvn clean install -> target/java-tomcat-sample.war
+	2. Copy this war file into Docker Image.
+
+Docker Containers -> Tomcat
+
+EKS Cluster:
+
+-> Application ( Java -> maven build -> .war -> Docker image Created ( Copy war file inside your docker )
+	- docker build -> Dockerfile -> Image -> push image into image registry ( Docker Hub )
+	- kubectl apply -f deployment.yaml
+
+Kubernetes:
+Deployment-tomcat-deployment-new
+	Replica set-1
+		PODs
+			Containers-2.0.0
+	Replica set-2
+		PODs
+			Containers-2.0.1
+
+================================================
+Github Projects:
+
+To Do:
+In Progress:
+Review:
+Done:
+
+------------------------------------
+IAC Creation : Ticket ( Ticket Management Tools ) : Jira, Service Now.
+- develop that code
+- Raise PR -> Reviewed ( Comments , address changes  ) Approved -> merge -> develop -> -> Execute Job from develop branch into qa environment
+- test and deploy it into production
+
+feature -> code changes -> deploy dev -> complete -> raise a PR from feature into develop -> approved -> merged -> develop -> deploy into qa -> test if it works -> raise another PR to merge develop into main -> approved -> merged -> main -> deployment ( main into prod environment )
+
+-----------------------------
+Ticket Number -> CA-123 , CA-145
+Branch : CA-123_s3_setup
+Branch : CA-123_s3_setup_changes
+
+Task Description:
+- Create 3 buckets using Cloudformation
+
+Acceptance Criteria:
+- Create s3 buckets using CF template with deployment scripts as per SDLC Setup
+=======================
+Clients : AWS Account Creation.
+2 types of accounts:
+development AWS Account:
+	- dev team ( dev, qa environment )
+	- dev-s3 bucket
+	- dev-lambda-function -> iam role of lambda -> dev-s3
+Production AWS Account:
+	- prod environment -> prod-s3 bucket policy : Principal ( arn of role of dev lambda function ) 
+
+1 AWS Account ( dev, qa, prod )
+
+Initially setup users , access to specific services

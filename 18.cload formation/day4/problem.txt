@@ -1,0 +1,20 @@
+CF Problem Statement:
+Provision a VPC Network Resources having 2 public subnets and 2 private subnets, IGW attached to VPC, VPC Gateway Endpoint for S3 Service.
+
+Provision RDS Instance in VPC private subnet launched in the previous step ( network stack ).
+
+Store RDS Endpoint and Login Details in SSM Parameter Store as Secret String.
+
+Provision an EC2 instance having access to IAM Role, that contains IAM Permissions to read and write data to S3 buckets, also validate network to connect with RDS instance.
+
+Validate the connection to RDS Instance from EC2 instance by executing mysql commands.
+
+Note:
+Use Free tier instance types for RDS and EC2 Instances to avoid cost.
+
+Use Cloudformation to create above resources.
+
+Template used to create above resources should be generic to create multiple environments in Multiple Region/Accounts.
+
+Delete stack/resources to avoid cost.
+

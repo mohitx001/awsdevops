@@ -1,0 +1,23 @@
+1. rc.local :-  It is traditionally executed after all the normal system services are started,
+ or bashrc :- When an interactive shell that is not a login shell is started, bash reads and executes commands from ~/.bashrc, if that file exists.
+
+2.Memcached is an open-source and free in-memory object caching system that has high performance and is distributed and generic in nature.
+
+
+3. Aurora is serverless and have 15 replica possible where as rds has only 5 replica and not serverless but managed
+
+4. iam user unable to change the password what to do
+>>check the policy of iam if not given permission to change the paasword
+
+5. how we can achieve 0 down time
+>>launching the machine lly
+6. how to list larget file in directory
+>> du -sch * | sort -nr |awk '{print $1}'
+
+7.lambda is fas:- function as a service
+
+8.serverless:-lambda,s3,arora,sns,cloudwatch,api gateway,EMR,redshift(Serverless implementations are usually event-driven. The instances are idle unless an event occurs. )
+
+9.managed service:-rds,ssm,(A managed service let the end-user focus on using a service rather than setting up the service)
+
+10. vpc peering in diffrent region not possible

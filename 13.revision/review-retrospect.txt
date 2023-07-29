@@ -1,0 +1,180 @@
+Ec2 :
+Payment module:
+				on demand 
+				spot
+				reserved 
+				dedicated 
+High availability : 
+					load balancer 
+						types : 
+						alb and nlb 
+						alb : http and https traffic 
+						nlb : udp 
+Scalability : vertical scaling : 
+horizontal scaling : auto scaling : target tracking policy 
+backup automation : using lifecycle manager , aws backup 
+
+
+S3 
+object storage vs block storage :
+storage tiers : 
+standard, glacier , 
+
+versioning : current version vs previous version 
+lifecycle policy : 
+transfer accelaration : edge locations 
+
+
+Bucket policy : https 
+
+object acl : read write 
+
+replication : versioning mandatory 
+
+s3 events : 
+
+static website hoosting : scales automatically 
+S3 cors : 
+
+
+
+
+
+
+
+
+VPC 
+	vpc peering : 
+				1. send request 
+				2. route table entries 
+				
+Nat gateway : uses elastic ip 
+			: deployed in public subnet 
+			: associated with private subnet 
+
+IGW : 1:1 
+
+Main route table : default route table : 
+
+
+public vs private subnet :
+							igw assigned for public 
+							auto assign public ip for public subnet is enabled 
+							
+
+vpc Endpoints : access aws services without internet 
+				gateway and interface 
+				
+
+Transit gateway : associations : VPC attachments 
+				: propagations : other vpc 
+				Resource access manager : transit gateway needs to be shared with other account 
+				
+VPN tunnel: on premise to aws using private network 
+
+ vpc :
+		route table 
+		nacl 
+		
+		
+NACL vs sg : 
+Subnet level vs instance level
+stateless vs stateful 
+allow+deny vs allow 
+priority vs no priority 
+
+VPC flowlogs 
+
+
+RDS:
+subnet group, paramater group , options group 
+
+Read replica : asynchronus 
+multi az deployment : synchronus , primary and standby 
+
+scheduled 
+
+
+Managed service :
+automated snapshots 
+automated minor version upgrades 
+Managed OS 
+Read replicas 
+multi az deployment 
+maintenence schedule 
+
+
+
+
+IAM
+Deny has precedence over allow 
+
+Policy types : 
+inline 
+customer managed and aws managed 
+
+
+User , group or a role 
+
+Role :
+trust entity : ec2.amazonaws.com 
+
+Federated login : SAML authentication : active directory 
+ 
+ 
+SSM 
+ 
+ Managed instance : 
+					1. ssm agent is running on it 
+					2. IAM role with appropriate permissions 
+					
+Session manager :  Console based ssh : audited : connect machines with private ip 
+
+Run command : 
+
+Patch manager : 
+Patch baseline : auto approval of patches : critical or so 
+patch group : tag based group 
+
+
+
+
+
+
+Cloudwatch
+
+Metrics : graphical interface for statistics 
+Alarm : Thres 
+
+Events and rules :
+rules : 
+event pattern , schedule : cron and fixed 
+
+
+Log group and log streams :
+
+
+log insights 
+
+Dashboard : centralised montoring 
+
+
+auto scaling 
+
+ 
+Athena 
+: amount of data scanned per query 
+: partition , compressed file formats 
+
+glue 
+: data catalog : stores schemas 
+: crawler : scans s3 , suggests schema 
+
+
+
+Cloudtrail 
+records api calls : auditing 
+default event history period : 90 days 
+create a trail : s3 , cloudwatch logs 
+
+

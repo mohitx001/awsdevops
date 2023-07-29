@@ -1,0 +1,19 @@
+version: 0.2
+
+# ENVIRONMENT_NAME : This will be used for CF stack name and AWS Resource Prefix
+# VPC_ID : This will be used in CF Template to create SG in VPC
+# SUBNET_ID : This will be used in CF Template to launch EC2 inside Subnet.
+
+env:
+  variables:
+    ENVIRONMENT_NAME: "$1"
+    VPC_ID: "$2"
+    SUBNET_ID: "$3"
+
+phases:
+  build:
+    commands:
+      - printenv
+      - ls -lrt
+      - echo "This is a Buildspec file to execute a shell script and create a CF stack"
+      - bash scripts/ec2_create.sh $ENVIRONMENT_NAME $VPC_ID $SUBNET_ID
