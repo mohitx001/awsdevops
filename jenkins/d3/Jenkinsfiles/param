@@ -1,0 +1,31 @@
+pipeline{
+    agent any
+    parameters {
+        string(name:'ec2-instance',defaultvalue: 'us-east-1', decription: "thankyou for beign here")
+    }
+    stages{
+        stage('build'){
+            step{
+                echo "in build stage"
+                echo "runnig ${env.BUILD_ID} on ${env.JENKIS_URL} " 
+
+            }
+        }
+    }
+    stages('test'){
+        stage{
+            step{
+                echo "in test area"
+                echo "${params.name} is the name of aws service"
+                
+            }
+        }
+    }
+    stages(deploy){
+        stage{
+            step{
+                
+            }
+        }
+    }
+}
