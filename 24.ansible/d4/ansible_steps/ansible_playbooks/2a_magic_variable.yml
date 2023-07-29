@@ -1,0 +1,11 @@
+---
+- name: Display magic variables
+  hosts: all
+  tasks:
+    - name: Display hostname
+      debug:
+        msg: "{{ inventory_hostname }}"
+
+    - name: Display groups
+      debug:
+        msg: "{{ groups['dev'] }}"

@@ -1,0 +1,27 @@
+# yum → installs, upgrade, downgrades, removes, and lists packages and groups with the “yum” package manager.
+# service → use this module to manage services (start, restart, enable on boot,disable, etc).
+---
+- name: latest version of all required packages installed
+  hosts: dev
+  tasks:
+    - name: install packages using yum
+      yum:
+        name:
+        - firewalld
+        - httpd
+        - mariadb-server
+        - php
+        - php-mysql
+        state: latest
+      notify:
+        - start httpd
+
+  handlers:
+    - name: start httpd
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+# To check whether package is installed use below command.
+# rpm -qa | grep firewalld

@@ -1,0 +1,20 @@
+## host variables : You can easily assign a variable to a single host, then use it later in playbooks
+## group variables : If all hosts in a group share a variable value, you can apply that variable to an entire group at once
+### Playbook execution commands as below
+# ansible-playbook 2b_variables.yml
+# ansible-playbook 2b_variables.yml --extra-vars "user=commandline-user"
+---
+- name: Use variables
+  hosts: localhost
+  vars:
+    - user: pay-user
+  tasks:
+    - name: Some interesting tasks
+      vars:
+        - user: task-user
+      debug:
+        msg: "{{ user }}"
+    - name: Using variables from inventory file
+      debug:
+        msg: "This user variable : {{ username }} and password variable : {{ password }} is coming from inventory file"
+

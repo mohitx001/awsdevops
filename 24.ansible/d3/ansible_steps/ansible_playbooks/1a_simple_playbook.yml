@@ -1,0 +1,14 @@
+# --- represents this file as a playbook
+# # Execute the playbook with command i.e ansible-playbook 1a_simple_playbook.yml
+---
+- name: This is Simple Playbook
+  # Execute this play on all hosts mentioned in inventory file.
+  hosts:  all
+  # List of tasks to be executed
+  tasks:
+    - name: This is Debug tasks 1
+      debug:
+        msg: "Hello from task 1"
+    - name: This is Debug tasks 2
+      debug:
+        msg: "Hello from task 2"

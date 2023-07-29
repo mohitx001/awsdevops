@@ -1,0 +1,18 @@
+# Running selective tasks and plays
+# If we want to choose not to run a whole playbook and instead may want to run specific task(s) or play(s) in a playbook. To do this, you can use tags.
+# Execute the playbook with tags specified to only specific tags
+# ansible-playbook 8c_tags.yml --tags test-tag
+
+---
+- name: Sample Playbook including tags
+  # Execute this play on all hosts mentioned in inventory file.
+  hosts:  all
+  # List of tasks to be executed
+  tasks:
+    - name: This is Debug tasks tagged with test-tag
+      debug:
+        msg: "Hello from task 1"
+      tags: test-tag
+    - name: This is Debug tasks 2
+      debug:
+        msg: "Hello from task 2"

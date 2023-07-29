@@ -1,0 +1,21 @@
+# Registering variables
+## You can create variables from the output of an Ansible task with the task keyword register.
+## You can use registered variables in any later tasks in your play
+
+---
+- name: Use variables Part 2
+  gather_facts: no
+  hosts: myhost
+
+  tasks:
+    - name: Get hostname of server
+      shell: hostname
+      register: hostname_val
+
+    - name: Use hostname_val entire output in another task
+      debug:
+        msg: "{{ hostname_val }}"
+
+    - name: Use hostname_val stdout output in another task
+      debug:
+        msg: "{{ hostname_val.stdout }}"

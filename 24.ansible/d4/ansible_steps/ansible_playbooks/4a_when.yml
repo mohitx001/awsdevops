@@ -1,0 +1,9 @@
+# when keyword will evaluate a Boolean Condition to statisfy the variable value, if it is True, the task will be executed, if not it will be skipped.
+---
+- name: When example
+  hosts: dev
+  tasks:
+    - name: Run task only when
+      debug:
+        msg: "{{ ansible_distribution }}"
+      when: inventory_hostname != 'localhost'

@@ -1,0 +1,9 @@
+---
+- name: Install web application packages
+  hosts: all
+  tasks:
+    - name: Includes the tasks file and defines the variables
+      include_vars: vars.yml
+    - name: Debugs the variables imported
+      debug:
+        msg: "{{ packages['web_package'] }} and {{ packages.db_package }} have been imported"

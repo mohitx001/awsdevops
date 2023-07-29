@@ -1,0 +1,16 @@
+---
+- name: Simple For loop example
+  hosts: myhost
+  tasks:
+    - name: This is For loop Task
+      debug:
+        msg: "My name is {{ item }}"
+      with_items: [1, 2, 4]
+
+    - name: This is For loop Task-2
+      debug:
+        msg: "My name is {{ item }}"
+      with_items:
+        - One
+        - Two
+        - Three

@@ -1,0 +1,38 @@
+# Start a few existing instances, run some tasks
+# and stop the instances
+
+- name: Start sandbox instances
+  hosts: localhost
+  gather_facts: false
+  vars:
+    instance_ids:
+      - 'i-0c74326e9193808dd'
+    region: us-east-1
+  tasks:
+    - name: Start the EC2 instances
+      ec2:
+        instance_ids: '{{ instance_ids }}'
+        region: '{{ region }}'
+        state: running
+        wait: True
+        vpc_subnet_id: subnet-b95974dc
+        assign_public_ip: yes
+  roles:
+    - apache
+
+- name: Stop sandbox instances
+  hosts: localhost
+  gather_facts: false
+  vars:
+    instance_ids:
+      - 'i-0c74326e9193808dd'
+    region: us-east-1
+  tasks:
+    - name: Stop the sandbox instances
+      ec2:
+        instance_ids: '{{ instance_ids }}'
+        region: '{{ region }}'
+        state: stopped
+        wait: True
+        vpc_subnet_id: subnet-b95974dc
+        assign_public_ip: yes

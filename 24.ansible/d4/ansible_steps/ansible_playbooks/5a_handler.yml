@@ -1,0 +1,25 @@
+# Handlers are tasks that only run when notified
+# handler will run only when there is a change that is happened in the notify task
+# notify task -> call/invoke the handler task
+
+---
+- name: Handler Play
+  hosts: dev
+  tasks:
+    - name: sample task 01
+      debug:
+        msg: "Sample Task to Restart sshd daemon"
+      notify:
+        - debug-task
+    - name: restart daemon
+      service: name=sshd state=restarted
+      notify:
+        - start-sshd-notify
+
+  handlers:
+    - name: start-sshd-notify
+      debug:
+        msg: "sshd has been restarted"
+    - name: debug-task
+      debug:
+        msg: "This will not be executed"

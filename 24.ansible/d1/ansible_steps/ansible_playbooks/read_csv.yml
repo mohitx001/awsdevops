@@ -1,0 +1,12 @@
+---
+- hosts: myhost
+  tasks:
+  - name: Read users from CSV file and return a dictionary
+    read_csv:
+      path: users.csv
+      key: name
+    register: users
+  - debug:
+      msg: '{{ users }}'
+  - debug:
+      msg: 'User {{ users.dict.bob.name }} has UID {{ users.dict.bob.uid }} and GID {{ users.dict.bob.gid }}'

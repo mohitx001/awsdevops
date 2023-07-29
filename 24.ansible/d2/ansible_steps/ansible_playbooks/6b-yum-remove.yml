@@ -1,0 +1,17 @@
+---
+- name: Remove the latest version of all required packages mentioned here.
+  hosts: dev
+  tasks:
+    - name: stop the httpd service
+      service:
+        name: httpd
+        state: stopped
+    - name: remove packages using yum
+      yum:
+        name:
+        - firewalld
+        - httpd
+        - mariadb-server
+        - php
+        - php-mysql
+        state: absent

@@ -1,0 +1,8 @@
+# Execute the playbook with Dry Run Systax i.e ansible-playbook 1b_dry_run.yml --check
+# service sshd status
+---
+- name: This playbook is used to restart sshd daemon and test the dry run
+  hosts: dev
+  tasks:
+    - name: restart daemon
+      service: name=sshd state=restarted

@@ -1,0 +1,27 @@
+---
+- name: First Play
+  hosts: dev
+  tasks:
+    - name: install packages using yum in play 1
+      yum:
+        name:
+        - firewalld
+        - httpd
+        state: latest
+    - name: start the httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: true
+    - name: test the html page
+      copy:
+        content: "This content is written from ansible playbook"
+        dest: /var/www/html/index.html
+
+- name: Test the web server
+  hosts: localhost
+  tasks:
+    - name: Try connecting to the httpd server
+      uri:
+        url: http://managed-node-01.example.com
+        status_code: 200
